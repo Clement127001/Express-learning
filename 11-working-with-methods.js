@@ -69,7 +69,6 @@ app.put("/api/people/:peopleId", (req, res) => {
   if (!person) res.status(404).send(`No person found with id:${id}`);
 
   if (!name) {
-    console.log("The length of the user name is : " + toString(name).length);
     return res.status(400).send("Provide the valid user name");
   }
 
