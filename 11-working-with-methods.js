@@ -21,6 +21,7 @@ app.get("/api/people", (req, res) => {
   res.status(200).json({ success: true, data: people });
 });
 
+//post routes
 app.post("/api/people", (req, res) => {
   const { name } = req.body;
 
@@ -36,12 +37,44 @@ app.post("/api/people", (req, res) => {
   //   res.status(201).send("The data is obtained");
 });
 
+app.post("/api/postman/people", (req, res) => {
+  const { name } = req.body;
+
+  if (!name)
+    return res
+      .status(400)
+      .json({ success: false, msg: "please provide the data for storing" });
+
+  res.status(201).json({ sucess: true, data: [...people, { name }] });
+});
+
 app.post("/login", (req, res) => {
   const { name } = req.body;
 
   if (name) res.status(200).json({ name });
 
   res.status(401).send("Please provide the user details");
+});
+
+//put routes for updaing the user details
+
+app.put("/api/people/:peopleId", (req, res) => {
+  const { peopleId: id } = req.params;
+  const { name } = req.body;
+
+  //finding the person with that given id
+
+  const person = people.find((person) => person.id === Number(id));
+
+  if (!person) res.status(404).send(`No person found with id:${id}`);
+
+  const newPeople = people.map((person) => {
+    if (person.id === Number(id)) person.name = name;
+
+    return person;
+  });
+
+  res.status(200).json({ success: true, data: newPeople });
 });
 
 app.listen(3000, () => {
