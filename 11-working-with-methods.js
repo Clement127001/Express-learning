@@ -68,11 +68,28 @@ app.put("/api/people/:peopleId", (req, res) => {
 
   if (!person) res.status(404).send(`No person found with id:${id}`);
 
+  if (!name) {
+    console.log("The length of the user name is : " + toString(name).length);
+    return res.status(400).send("Provide the valid user name");
+  }
+
   const newPeople = people.map((person) => {
     if (person.id === Number(id)) person.name = name;
 
     return person;
   });
+
+  res.status(200).json({ success: true, data: newPeople });
+});
+
+app.delete("/api/people/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  const person = people.find((person) => person.id === id);
+
+  if (!person) return res.status(400).send(`User not exists with id : ${id}`);
+
+  const newPeople = people.filter((person) => person.id !== id);
 
   res.status(200).json({ success: true, data: newPeople });
 });
