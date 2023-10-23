@@ -21,6 +21,15 @@ app.get("/api/people", (req, res) => {
   res.status(200).json({ success: true, data: people });
 });
 
+app.get("/api/people/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  const person = people.find((per) => per.id === id);
+  if (!person) return res.status(404).send(`No person found with id:${id}`);
+
+  return res.status(200).json({ success: true, data: person });
+});
+
 //post routes
 app.post("/api/people", (req, res) => {
   const { name } = req.body;
@@ -66,7 +75,7 @@ app.put("/api/people/:peopleId", (req, res) => {
 
   const person = people.find((person) => person.id === Number(id));
 
-  if (!person) res.status(404).send(`No person found with id:${id}`);
+  if (!person) return res.status(404).send(`No person found with id:${id}`);
 
   if (!name) {
     return res.status(400).send("Provide the valid user name");
@@ -86,7 +95,7 @@ app.delete("/api/people/:id", (req, res) => {
 
   const person = people.find((person) => person.id === id);
 
-  if (!person) return res.status(400).send(`User not exists with id : ${id}`);
+  if (!person) return res.status(404).send(`User not exists with id : ${id}`);
 
   const newPeople = people.filter((person) => person.id !== id);
 
